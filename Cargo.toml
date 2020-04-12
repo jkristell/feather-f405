@@ -8,18 +8,22 @@ edition = "2018"
 cortex-m = { version = "0.6" }
 cortex-m-rt = { version = "0.6" }
 embedded-hal = "0.2.3"
-panic-halt = "0.2.0"
-cortex-m-semihosting = {version = "0.3.5" }
-usb-device = "0.2.5"
-usbd-serial = "0.1.0"
+embedded-sdmmc = "0.3.0"
+spi-memory = "0.2.0"
+smart-leds = "0.3.0"
+ws2812-timer-delay = "0.3.0"
 
 [dependencies.stm32f4xx-hal]
 git = "https://github.com/stm32-rs/stm32f4xx-hal.git"
 features = ["rt", "stm32f405", "usb_fs"]
 
 [dev-dependencies]
-smart-leds = "0.3.0"
-ws2812-timer-delay = "0.3.0"
+usb-device = "0.2.5"
+usbd-serial = "0.1.0"
+rtt-target = {version = "0.2", features = ["cortex-m"]}
+panic-rtt-target = { version = "0.1", features = ["cortex-m"] }
+usbd_scsi = "0.1.0"
+usbd_mass_storage = "0.1.0"
 
 [profile.release]
 lto             = true
