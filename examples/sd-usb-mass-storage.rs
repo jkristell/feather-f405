@@ -13,6 +13,7 @@ use stm32f4xx_hal::{
     otg_fs::{UsbBus, UsbBusType, USB},
     prelude::*,
     stm32,
+    sdio::ClockFreq,
 };
 
 use usb_device::{bus::UsbBusAllocator, prelude::*};
@@ -88,7 +89,7 @@ fn main() -> ! {
 
     // Loop until we have a card
     loop {
-        match sd.sdio.init_card() {
+        match sd.sdio.init_card(ClockFreq::F24Mhz) {
             Ok(_) => break,
             Err(err) => {
                 rprintln!("Init err: {:?}", err);
