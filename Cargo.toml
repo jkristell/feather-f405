@@ -1,9 +1,11 @@
 [package]
 name = "feather-f405"
+description = "Board support package for the Adafruit feather f405"
 version = "0.1.0"
 authors = ["Johan Kristell <johan@jott.se>"]
 edition = "2018"
 readme = "README.md"
+license = "MIT OR Apache-2.0"
 repository = "https://github.com/jkristell/feather-f405"
 keywords = [
     "arm",
