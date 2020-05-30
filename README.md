@@ -1,4 +1,13 @@
-# feather-f405
+# Feather-f405
+
+Board support package for the Adafruit feather f405 with some abstractions
+and helpers for the onboard peripherals.
+
+Support and examples for the
+ - onboard led
+ - Neopixel led
+ - SD-card reader
+ - Spi flash
 
 ## Flashing
 
