@@ -27,8 +27,7 @@ smart-leds = "0.3.0"
 ws2812-timer-delay = "0.3.0"
 
 [dependencies.stm32f4xx-hal]
-git = "https://github.com/stm32-rs/stm32f4xx-hal.git"
-rev = "7b619fa3f"
+version = "^0.8.2"
 features = ["rt", "stm32f405", "usb_fs"]
 
 [dev-dependencies]
