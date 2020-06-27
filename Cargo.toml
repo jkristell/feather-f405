@@ -20,25 +20,22 @@ categories = [
 ]
 
 [dependencies]
+stm32f4xx-hal = { version = "^0.8.2", features = ["rt", "stm32f405", "usb_fs"] }
 cortex-m = { version = "0.6" }
 cortex-m-rt = { version = "0.6" }
-embedded-hal = "0.2.3"
+embedded-hal = "0.2"
 embedded-sdmmc = "0.3.0"
-spi-memory = "0.2.0"
-smart-leds = "0.3.0"
-ws2812-timer-delay = "0.3.0"
-
-[dependencies.stm32f4xx-hal]
-version = "^0.8.2"
-features = ["rt", "stm32f405", "usb_fs"]
+spi-memory = "0.2"
+smart-leds = "0.3"
+ws2812-timer-delay = "0.3"
 
 [dev-dependencies]
-usb-device = "0.2.5"
-usbd-serial = "0.1.0"
+usb-device = "0.2"
+usbd-serial = "0.1"
 rtt-target = {version = "0.2", features = ["cortex-m"]}
 panic-rtt-target = { version = "0.1", features = ["cortex-m"] }
-usbd_scsi = "0.1.0"
-usbd_mass_storage = "0.1.0"
+usbd_scsi = "0.1"
+usbd_mass_storage = "0.1"
 
 [profile.release]
 lto             = true
