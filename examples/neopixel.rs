@@ -5,9 +5,11 @@ use cortex_m_rt::entry;
 use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
 
-use stm32f4xx_hal::{delay::Delay, prelude::*, stm32, timer::Timer};
-
-use feather_f405::{clock_setup, NeoPixel};
+use feather_f405::{
+    clock_setup,
+    hal::{delay::Delay, prelude::*, stm32, timer::Timer},
+    NeoPixel,
+};
 use smart_leds::{SmartLedsWrite, RGB8};
 
 #[entry]

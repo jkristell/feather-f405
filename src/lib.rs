@@ -12,3 +12,5 @@ pub use flash::Flash;
 pub use led::Led;
 pub use neopixel::NeoPixel;
 pub use sdcard::SdHost;
+
+pub use stm32f4xx_hal as hal;

@@ -5,8 +5,11 @@ use cortex_m_rt::entry;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
-use feather_f405::{clock_setup, Flash};
-use stm32f4xx_hal::{prelude::*, stm32};
+use feather_f405::{
+    clock_setup,
+    hal::{prelude::*, stm32},
+    Flash,
+};
 
 #[entry]
 fn main() -> ! {

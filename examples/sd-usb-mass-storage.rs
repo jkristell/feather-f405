@@ -8,20 +8,21 @@ use cortex_m_rt::entry;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
-use stm32f4xx_hal::{
-    delay, interrupt,
-    otg_fs::{UsbBus, UsbBusType, USB},
-    prelude::*,
-    stm32,
-    sdio::ClockFreq,
-};
-
 use usb_device::{bus::UsbBusAllocator, prelude::*};
-
 use usbd_mass_storage;
 use usbd_scsi::{BlockDevice, BlockDeviceError, Scsi};
 
-use feather_f405::{clock_setup, Led, SdHost};
+use feather_f405::{
+    clock_setup,
+    hal::{
+        delay, interrupt,
+        otg_fs::{UsbBus, UsbBusType, USB},
+        prelude::*,
+        sdio::ClockFreq,
+        stm32,
+    },
+    Led, SdHost,
+};
 
 // Globals
 static mut EP_MEMORY: [u32; 1024] = [0; 1024];
