@@ -19,8 +19,8 @@ use feather_f405::{
         otg_fs::{UsbBus, UsbBusType, USB},
         prelude::*,
         sdio::ClockFreq,
-        stm32,
     },
+    pac,
     Led, SdHost,
 };
 
@@ -67,7 +67,7 @@ impl BlockDevice for Storage {
 fn main() -> ! {
     rtt_init_print!(BlockIfFull);
 
-    let dp = stm32::Peripherals::take().unwrap();
+    let dp = pac::Peripherals::take().unwrap();
     let p = cortex_m::Peripherals::take().unwrap();
 
     let clocks = clock_setup(dp.RCC);
@@ -148,7 +148,7 @@ fn main() -> ! {
     };
 
     unsafe {
-        NVIC::unmask(stm32::Interrupt::OTG_FS);
+        NVIC::unmask(pac::Interrupt::OTG_FS);
     }
 
     rprintln!("Init done");

@@ -7,7 +7,8 @@ use rtt_target::{rprintln, rtt_init_print};
 
 use feather_f405::{
     clock_setup,
-    hal::{prelude::*, stm32},
+    hal::{prelude::*},
+    pac,
     Flash,
 };
 
@@ -16,7 +17,7 @@ fn main() -> ! {
     rtt_init_print!();
 
     let _p = cortex_m::Peripherals::take().unwrap();
-    let dp = stm32::Peripherals::take().unwrap();
+    let dp = pac::Peripherals::take().unwrap();
 
     // Setup the clocks
     let clocks = clock_setup(dp.RCC);

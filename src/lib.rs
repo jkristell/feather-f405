@@ -14,3 +14,4 @@ pub use neopixel::NeoPixel;
 pub use sdcard::SdHost;
 
 pub use stm32f4xx_hal as hal;
+pub use hal::stm32 as pac;

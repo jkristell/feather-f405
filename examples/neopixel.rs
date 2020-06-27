@@ -7,7 +7,8 @@ use rtt_target::rtt_init_print;
 
 use feather_f405::{
     clock_setup,
-    hal::{delay::Delay, prelude::*, stm32, timer::Timer},
+    hal::{delay::Delay, prelude::*, timer::Timer},
+    pac,
     NeoPixel,
 };
 use smart_leds::{SmartLedsWrite, RGB8};
@@ -17,7 +18,7 @@ fn main() -> ! {
     rtt_init_print!();
 
     let p = cortex_m::Peripherals::take().unwrap();
-    let dp = stm32::Peripherals::take().unwrap();
+    let dp = pac::Peripherals::take().unwrap();
 
     let clocks = clock_setup(dp.RCC);
 
