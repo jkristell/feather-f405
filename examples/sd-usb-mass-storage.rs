@@ -23,6 +23,7 @@ use feather_f405::{
     pac,
     Led, SdHost,
 };
+use core::convert::TryInto;
 
 // Globals
 static mut EP_MEMORY: [u32; 1024] = [0; 1024];
@@ -41,6 +42,8 @@ impl BlockDevice for Storage {
     fn read_block(&self, lba: u32, block: &mut [u8]) -> Result<(), BlockDeviceError> {
         let sdio = &mut self.host.borrow_mut().sdio;
 
+        let block: &mut [u8; 512] = block.try_into().map_err(|_e| BlockDeviceError::InvalidAddress)?;
+
         sdio.read_block(lba, block).map_err(|e| {
             rprintln!("read error: {:?}", e);
             BlockDeviceError::HardwareError
@@ -49,6 +52,9 @@ impl BlockDevice for Storage {
 
     fn write_block(&mut self, lba: u32, block: &[u8]) -> Result<(), BlockDeviceError> {
         let sdio = &mut self.host.borrow_mut().sdio;
+
+        let block: &[u8; 512] = block.try_into()
+            .map_err(|_e| BlockDeviceError::InvalidAddress)?;
 
         sdio.write_block(lba, block).map_err(|e| {
             rprintln!("write error: {:?}", e);
@@ -83,7 +89,7 @@ fn main() -> ! {
     let mut led = Led::new(gpioc.pc1);
 
     let mut sd = SdHost::new(
-        dp.SDIO, gpioc.pc12, gpiod.pd2, gpioc.pc8, gpioc.pc9, gpioc.pc10, gpioc.pc11, gpiob.pb12,
+        dp.SDIO, gpioc.pc12, gpiod.pd2, gpioc.pc8, gpioc.pc9, gpioc.pc10, gpioc.pc11, gpiob.pb12, clocks
     );
 
     rprintln!("Init done");
@@ -119,6 +125,7 @@ fn main() -> ! {
             usb_pwrclk: dp.OTG_FS_PWRCLK,
             pin_dm: gpioa.pa11.into_alternate_af10(),
             pin_dp: gpioa.pa12.into_alternate_af10(),
+            hclk: clocks.hclk(),
         };
 
         let usb_bus = UsbBus::new(usb, &mut EP_MEMORY);
