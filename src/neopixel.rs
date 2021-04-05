@@ -2,8 +2,8 @@ use stm32f4xx_hal::gpio::gpioc::PC0;
 use stm32f4xx_hal::gpio::{Output, PushPull, Speed};
 use ws2812_timer_delay::Ws2812;
 
-use embedded_hal::timer::{CountDown, Periodic};
 use core::ops::{Deref, DerefMut};
+use embedded_hal::timer::{CountDown, Periodic};
 
 /// NeoPixel
 pub struct NeoPixel<Timer> {

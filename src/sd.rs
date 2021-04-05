@@ -1,3 +1,4 @@
+use core::ops::{Deref, DerefMut};
 use stm32f4xx_hal::{
     gpio::{
         gpiob::PB12,
@@ -5,11 +6,10 @@ use stm32f4xx_hal::{
         gpiod::PD2,
         Input, PullUp,
     },
+    rcc::Clocks,
     sdio::Sdio,
     stm32::SDIO,
-    rcc::Clocks
 };
-use core::ops::{Deref, DerefMut};
 
 /// The sd host on the feather board
 pub struct SdHost {

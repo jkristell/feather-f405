@@ -5,12 +5,10 @@ use cortex_m_rt::entry;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
-use feather_f405::{setup_clocks, hal::{
-    delay,
-    prelude::*,
-    sdio::{ClockFreq},
-    stm32,
-}, SdHost};
+use feather_f405::{
+    hal::{delay, prelude::*, sdio::ClockFreq, stm32},
+    setup_clocks, SdHost,
+};
 
 #[entry]
 fn main() -> ! {
@@ -29,7 +27,15 @@ fn main() -> ! {
     let gpiod = device.GPIOD.split();
 
     let mut sd = SdHost::new(
-        device.SDIO, gpioc.pc12, gpiod.pd2, gpioc.pc8, gpioc.pc9, gpioc.pc10, gpioc.pc11, gpiob.pb12, clocks
+        device.SDIO,
+        gpioc.pc12,
+        gpiod.pd2,
+        gpioc.pc8,
+        gpioc.pc9,
+        gpioc.pc10,
+        gpioc.pc11,
+        gpiob.pb12,
+        clocks,
     );
 
     rprintln!("Waiting for card...");

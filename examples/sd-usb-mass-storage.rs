@@ -12,18 +12,16 @@ use usb_device::{bus::UsbBusAllocator, prelude::*};
 use usbd_mass_storage;
 use usbd_scsi::{BlockDevice, BlockDeviceError, Scsi};
 
+use core::convert::TryInto;
 use feather_f405::{
-    setup_clocks,
     hal::{
         delay, interrupt,
         otg_fs::{UsbBus, UsbBusType, USB},
         prelude::*,
         sdio::ClockFreq,
     },
-    pac,
-    Led, SdHost,
+    pac, setup_clocks, Led, SdHost,
 };
-use core::convert::TryInto;
 
 // Globals
 static mut EP_MEMORY: [u32; 1024] = [0; 1024];
@@ -42,7 +40,9 @@ impl BlockDevice for Storage {
     fn read_block(&self, lba: u32, block: &mut [u8]) -> Result<(), BlockDeviceError> {
         let sdio = &mut self.host.borrow_mut();
 
-        let block: &mut [u8; 512] = block.try_into().map_err(|_e| BlockDeviceError::InvalidAddress)?;
+        let block: &mut [u8; 512] = block
+            .try_into()
+            .map_err(|_e| BlockDeviceError::InvalidAddress)?;
 
         sdio.read_block(lba, block).map_err(|e| {
             rprintln!("read error: {:?}", e);
@@ -53,7 +53,8 @@ impl BlockDevice for Storage {
     fn write_block(&mut self, lba: u32, block: &[u8]) -> Result<(), BlockDeviceError> {
         let sdio = &mut self.host.borrow_mut();
 
-        let block: &[u8; 512] = block.try_into()
+        let block: &[u8; 512] = block
+            .try_into()
             .map_err(|_e| BlockDeviceError::InvalidAddress)?;
 
         sdio.write_block(lba, block).map_err(|e| {
@@ -89,7 +90,8 @@ fn main() -> ! {
     let mut led = Led::new(gpioc.pc1);
 
     let mut sd = SdHost::new(
-        dp.SDIO, gpioc.pc12, gpiod.pd2, gpioc.pc8, gpioc.pc9, gpioc.pc10, gpioc.pc11, gpiob.pb12, clocks
+        dp.SDIO, gpioc.pc12, gpiod.pd2, gpioc.pc8, gpioc.pc9, gpioc.pc10, gpioc.pc11, gpiob.pb12,
+        clocks,
     );
 
     rprintln!("Init done");

@@ -13,5 +13,5 @@ pub use led::Led;
 pub use neopixel::NeoPixel;
 pub use sd::SdHost;
 
-pub use stm32f4xx_hal as hal;
 pub use hal::stm32 as pac;
+pub use stm32f4xx_hal as hal;

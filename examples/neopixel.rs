@@ -6,10 +6,8 @@ use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
 
 use feather_f405::{
-    setup_clocks,
     hal::{delay::Delay, prelude::*, timer::Timer},
-    pac,
-    NeoPixel,
+    pac, setup_clocks, NeoPixel,
 };
 use smart_leds::{SmartLedsWrite, RGB8};
 

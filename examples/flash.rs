@@ -5,12 +5,7 @@ use cortex_m_rt::entry;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
-use feather_f405::{
-    setup_clocks,
-    hal::{prelude::*},
-    pac,
-    Flash,
-};
+use feather_f405::{hal::prelude::*, pac, setup_clocks, Flash};
 
 #[entry]
 fn main() -> ! {
