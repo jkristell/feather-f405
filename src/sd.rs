@@ -9,13 +9,14 @@ use stm32f4xx_hal::{
     stm32::SDIO,
     rcc::Clocks
 };
+use core::ops::{Deref, DerefMut};
 
 /// The sd host on the feather board
 pub struct SdHost {
     /// Card detect pin
     pub cd: PB12<Input<PullUp>>,
     /// Sdio device
-    pub sdio: Sdio,
+    sdio: Sdio,
 }
 
 impl SdHost {
@@ -42,5 +43,19 @@ impl SdHost {
 
         let sdio = Sdio::new(dev, (clk, cmd, d0, d1, d2, d3), clocks);
         SdHost { sdio, cd }
+    }
+}
+
+impl Deref for SdHost {
+    type Target = Sdio;
+
+    fn deref(&self) -> &Self::Target {
+        &self.sdio
+    }
+}
+
+impl DerefMut for SdHost {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.sdio
     }
 }

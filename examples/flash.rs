@@ -6,7 +6,7 @@ use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
 use feather_f405::{
-    clock_setup,
+    setup_clocks,
     hal::{prelude::*},
     pac,
     Flash,
@@ -20,7 +20,7 @@ fn main() -> ! {
     let dp = pac::Peripherals::take().unwrap();
 
     // Setup the clocks
-    let clocks = clock_setup(dp.RCC);
+    let clocks = setup_clocks(dp.RCC);
 
     let gpioa = dp.GPIOA.split();
     let gpiob = dp.GPIOB.split();

@@ -6,7 +6,7 @@ use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
 
 use feather_f405::{
-    clock_setup,
+    setup_clocks,
     hal::{delay::Delay, prelude::*, timer::Timer},
     pac,
     NeoPixel,
@@ -20,7 +20,7 @@ fn main() -> ! {
     let p = cortex_m::Peripherals::take().unwrap();
     let dp = pac::Peripherals::take().unwrap();
 
-    let clocks = clock_setup(dp.RCC);
+    let clocks = setup_clocks(dp.RCC);
 
     let mut delay = Delay::new(p.SYST, clocks);
     let gpioc = dp.GPIOC.split();
@@ -35,7 +35,7 @@ fn main() -> ! {
         data.g = data.g.wrapping_add(8);
         data.b = data.b.wrapping_add(16);
 
-        neopixel.ws.write([data].iter().cloned()).unwrap();
+        neopixel.write([data].iter().cloned()).unwrap();
 
         delay.delay_ms(50u16);
     }

@@ -3,7 +3,7 @@ use stm32f4xx_hal::stm32;
 use stm32f4xx_hal::time::U32Ext;
 
 /// Helper for setting up the clocks on the board
-pub fn clock_setup(rcc: stm32::RCC) -> Clocks {
+pub fn setup_clocks(rcc: stm32::RCC) -> Clocks {
     // Constrain clock registers
     let rcc = rcc.constrain();
 

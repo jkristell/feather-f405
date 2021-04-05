@@ -13,7 +13,7 @@ use usbd_mass_storage;
 use usbd_scsi::{BlockDevice, BlockDeviceError, Scsi};
 
 use feather_f405::{
-    clock_setup,
+    setup_clocks,
     hal::{
         delay, interrupt,
         otg_fs::{UsbBus, UsbBusType, USB},
@@ -40,7 +40,7 @@ impl BlockDevice for Storage {
     const BLOCK_BYTES: usize = 512;
 
     fn read_block(&self, lba: u32, block: &mut [u8]) -> Result<(), BlockDeviceError> {
-        let sdio = &mut self.host.borrow_mut().sdio;
+        let sdio = &mut self.host.borrow_mut();
 
         let block: &mut [u8; 512] = block.try_into().map_err(|_e| BlockDeviceError::InvalidAddress)?;
 
@@ -51,7 +51,7 @@ impl BlockDevice for Storage {
     }
 
     fn write_block(&mut self, lba: u32, block: &[u8]) -> Result<(), BlockDeviceError> {
-        let sdio = &mut self.host.borrow_mut().sdio;
+        let sdio = &mut self.host.borrow_mut();
 
         let block: &[u8; 512] = block.try_into()
             .map_err(|_e| BlockDeviceError::InvalidAddress)?;
@@ -63,7 +63,7 @@ impl BlockDevice for Storage {
     }
 
     fn max_lba(&self) -> u32 {
-        let sdio = &self.host.borrow().sdio;
+        let sdio = &self.host.borrow();
 
         sdio.card().map(|c| c.block_count() - 1).unwrap_or(0)
     }
@@ -76,7 +76,7 @@ fn main() -> ! {
     let dp = pac::Peripherals::take().unwrap();
     let p = cortex_m::Peripherals::take().unwrap();
 
-    let clocks = clock_setup(dp.RCC);
+    let clocks = setup_clocks(dp.RCC);
 
     // Create a delay abstraction based on SysTick
     let mut delay = delay::Delay::new(p.SYST, clocks);
@@ -96,7 +96,7 @@ fn main() -> ! {
 
     // Loop until we have a card
     loop {
-        match sd.sdio.init_card(ClockFreq::F24Mhz) {
+        match sd.init_card(ClockFreq::F24Mhz) {
             Ok(_) => break,
             Err(err) => {
                 rprintln!("Init err: {:?}", err);
@@ -111,7 +111,7 @@ fn main() -> ! {
 
     rprintln!(
         "Card with blocks: {:?} detected. Initiating usb...",
-        sd.sdio.card().map(|c| c.block_count())
+        sd.card().map(|c| c.block_count())
     );
 
     let sdhc = Storage {
