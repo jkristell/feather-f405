@@ -20,8 +20,8 @@ categories = [
 ]
 
 [dependencies]
-stm32f4xx-hal = { version = "^0.8.2", features = ["rt", "stm32f405", "usb_fs"] }
-cortex-m = { version = "0.6" }
+stm32f4xx-hal = { version = "0.9", features = ["rt", "stm32f405", "usb_fs", "sdio"] }
+cortex-m = { version = "0.7" }
 cortex-m-rt = { version = "0.6" }
 embedded-hal = "0.2"
 embedded-sdmmc = "0.3.0"
@@ -32,21 +32,21 @@ ws2812-timer-delay = "0.3"
 [dev-dependencies]
 usb-device = "0.2"
 usbd-serial = "0.1"
-rtt-target = {version = "0.2", features = ["cortex-m"]}
+rtt-target = { version = "0.3", features = ["cortex-m"] }
 panic-rtt-target = { version = "0.1", features = ["cortex-m"] }
 usbd_scsi = "0.1"
 usbd_mass_storage = "0.1"
 
 [profile.release]
-lto             = true
-debug           = true
-incremental     = false
-codegen-units   = 1
-opt-level       = 's'
+lto = true
+debug = true
+incremental = false
+codegen-units = 1
+opt-level = 's'
 
 [profile.dev]
-lto             = true
-debug           = true
-incremental     = false
-codegen-units   = 1
-opt-level       = 0
+lto = true
+debug = true
+incremental = false
+codegen-units = 1
+opt-level = 0
