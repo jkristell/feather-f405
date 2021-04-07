@@ -98,7 +98,7 @@ fn main() -> ! {
 
     // Loop until we have a card
     loop {
-        match sd.init_card(ClockFreq::F24Mhz) {
+        match sd.init_card(ClockFreq::F12Mhz) {
             Ok(_) => break,
             Err(err) => {
                 rprintln!("Init err: {:?}", err);
