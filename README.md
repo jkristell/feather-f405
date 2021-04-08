@@ -1,3 +1,6 @@
+[![crates.io version](https://meritbadge.herokuapp.com/feather-f405)](https://crates.io/crates/feather-f405)
+[![docs.rs](https://docs.rs/feather-f405/badge.svg)](https://docs.rs/feather-f405)
+
 # Feather-f405
 
 Board support package for the Adafruit feather f405 with some abstractions
