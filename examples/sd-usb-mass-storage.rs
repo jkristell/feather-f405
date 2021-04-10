@@ -44,10 +44,18 @@ impl BlockDevice for Storage {
             .try_into()
             .map_err(|_e| BlockDeviceError::InvalidAddress)?;
 
-        sdio.read_block(lba, block).map_err(|e| {
-            rprintln!("read error: {:?}", e);
-            BlockDeviceError::HardwareError
-        })
+        // Use this until const generics and try_into is a thing
+        let mut b = [0; 512];
+
+        sdio
+            .read_block(lba, &mut b)
+            .map_err(|e| {
+                rprintln!("read error: {:?}", e);
+                BlockDeviceError::HardwareError
+            })?;
+
+        block.copy_from_slice(&b);
+        Ok(())
     }
 
     fn write_block(&mut self, lba: u32, block: &[u8]) -> Result<(), BlockDeviceError> {
@@ -57,10 +65,18 @@ impl BlockDevice for Storage {
             .try_into()
             .map_err(|_e| BlockDeviceError::InvalidAddress)?;
 
-        sdio.write_block(lba, block).map_err(|e| {
-            rprintln!("write error: {:?}", e);
-            BlockDeviceError::WriteError
-        })
+        // Use this until const generics and try_into is a thing
+        let mut b = [0; 512];
+        b.copy_from_slice(&block);
+
+        sdio
+            .write_block(lba, &b)
+            .map_err(|e| {
+                rprintln!("write error: {:?}", e);
+                BlockDeviceError::WriteError
+            })?;
+
+        Ok(())
     }
 
     fn max_lba(&self) -> u32 {
@@ -127,7 +143,7 @@ fn main() -> ! {
             usb_pwrclk: dp.OTG_FS_PWRCLK,
             pin_dm: gpioa.pa11.into_alternate_af10(),
             pin_dp: gpioa.pa12.into_alternate_af10(),
-            hclk: clocks.hclk(),
+            hclk: clocks.hclk()
         };
 
         let usb_bus = UsbBus::new(usb, &mut EP_MEMORY);

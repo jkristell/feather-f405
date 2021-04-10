@@ -8,8 +8,10 @@ use stm32f4xx_hal::{
     },
     rcc::Clocks,
     sdio::Sdio,
-    stm32::SDIO,
+    pac::SDIO,
+    rcc::Clocks,
 };
+use stm32f4xx_hal::gpio::Speed;
 
 /// The sd host on the feather board
 pub struct SdHost {
@@ -31,12 +33,12 @@ impl SdHost {
         card_detect: PB12<M6>,
         clocks: Clocks,
     ) -> Self {
-        let clk = clk.into_alternate_af12().internal_pull_up(false);
-        let cmd = cmd.into_alternate_af12().internal_pull_up(true);
-        let d0 = d0.into_alternate_af12().internal_pull_up(true);
-        let d1 = d1.into_alternate_af12().internal_pull_up(true);
-        let d2 = d2.into_alternate_af12().internal_pull_up(true);
-        let d3 = d3.into_alternate_af12().internal_pull_up(true);
+        let clk = clk.into_alternate_af12().internal_pull_up(false).set_speed(Speed::VeryHigh);
+        let cmd = cmd.into_alternate_af12().internal_pull_up(true).set_speed(Speed::VeryHigh);
+        let d0 = d0.into_alternate_af12().internal_pull_up(true).set_speed(Speed::VeryHigh);
+        let d1 = d1.into_alternate_af12().internal_pull_up(true).set_speed(Speed::VeryHigh);
+        let d2 = d2.into_alternate_af12().internal_pull_up(true).set_speed(Speed::VeryHigh);
+        let d3 = d3.into_alternate_af12().internal_pull_up(true).set_speed(Speed::VeryHigh);
 
         // Card detect pin
         let cd = card_detect.into_pull_up_input();
