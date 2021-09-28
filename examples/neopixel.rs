@@ -20,10 +20,10 @@ fn main() -> ! {
 
     let clocks = setup_clocks(dp.RCC);
 
-    let mut delay = Delay::new(p.SYST, clocks);
+    let mut delay = Delay::new(p.SYST, &clocks);
     let gpioc = dp.GPIOC.split();
 
-    let timer = Timer::tim2(dp.TIM2, 3.mhz(), clocks);
+    let timer = Timer::new(dp.TIM2, &clocks).start_count_down(3_000_000);
     let mut neopixel = NeoPixel::new(gpioc.pc0, timer);
 
     let mut data = RGB8 { r: 0, g: 0, b: 0 };

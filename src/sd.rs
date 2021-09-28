@@ -24,19 +24,16 @@ impl SdHost {
         dev: SDIO,
         clk: PC12<M0>,
         cmd: PD2<M1>,
-        d0: PC8<M2>,
-        d1: PC9<M3>,
-        d2: PC10<M4>,
-        d3: PC11<M5>,
+        (d0, d1, d2, d3): (PC8<M2>, PC9<M3>, PC10<M4>, PC11<M5>),
         card_detect: PB12<M6>,
         clocks: Clocks,
     ) -> Self {
-        let clk = clk.into_alternate_af12().internal_pull_up(false);
-        let cmd = cmd.into_alternate_af12().internal_pull_up(true);
-        let d0 = d0.into_alternate_af12().internal_pull_up(true);
-        let d1 = d1.into_alternate_af12().internal_pull_up(true);
-        let d2 = d2.into_alternate_af12().internal_pull_up(true);
-        let d3 = d3.into_alternate_af12().internal_pull_up(true);
+        let clk = clk.into_alternate().internal_pull_up(false);
+        let cmd = cmd.into_alternate().internal_pull_up(true);
+        let d0 = d0.into_alternate().internal_pull_up(true);
+        let d1 = d1.into_alternate().internal_pull_up(true);
+        let d2 = d2.into_alternate().internal_pull_up(true);
+        let d3 = d3.into_alternate().internal_pull_up(true);
 
         // Card detect pin
         let cd = card_detect.into_pull_up_input();

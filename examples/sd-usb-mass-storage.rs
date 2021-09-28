@@ -9,7 +9,6 @@ use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
 use usb_device::{bus::UsbBusAllocator, prelude::*};
-use usbd_mass_storage;
 use usbd_scsi::{BlockDevice, BlockDeviceError, Scsi};
 
 use core::convert::TryInto;
@@ -80,7 +79,7 @@ fn main() -> ! {
     let clocks = setup_clocks(dp.RCC);
 
     // Create a delay abstraction based on SysTick
-    let mut delay = delay::Delay::new(p.SYST, clocks);
+    let mut delay = delay::Delay::new(p.SYST, &clocks);
 
     let gpioa = dp.GPIOA.split();
     let gpiob = dp.GPIOB.split();
@@ -89,10 +88,15 @@ fn main() -> ! {
 
     let mut led = Led::new(gpioc.pc1);
 
-    let mut sd = SdHost::new(
-        dp.SDIO, gpioc.pc12, gpiod.pd2, gpioc.pc8, gpioc.pc9, gpioc.pc10, gpioc.pc11, gpiob.pb12,
-        clocks,
-    );
+
+    let mut sd = {
+        let clk = gpioc.pc12;
+        let cmd = gpiod.pd2;
+        let data = (gpioc.pc8, gpioc.pc9, gpioc.pc10, gpioc.pc11);
+        let cd = gpiob.pb12;
+
+        SdHost::new(dp.SDIO, clk, cmd, data, cd, clocks)
+    };
 
     rprintln!("Init done");
 
@@ -125,8 +129,8 @@ fn main() -> ! {
             usb_global: dp.OTG_FS_GLOBAL,
             usb_device: dp.OTG_FS_DEVICE,
             usb_pwrclk: dp.OTG_FS_PWRCLK,
-            pin_dm: gpioa.pa11.into_alternate_af10(),
-            pin_dp: gpioa.pa12.into_alternate_af10(),
+            pin_dm: gpioa.pa11.into_alternate(),
+            pin_dp: gpioa.pa12.into_alternate(),
             hclk: clocks.hclk(),
         };
 
@@ -176,8 +180,6 @@ fn OTG_FS() {
         let mut scsi = USB_STORAGE.borrow(cs).borrow_mut();
         let scsi = scsi.as_mut().unwrap();
 
-        if !usb_dev.poll(&mut [scsi]) {
-            return;
-        }
+        usb_dev.poll(&mut [scsi]);
     });
 }

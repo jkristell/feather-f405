@@ -5,12 +5,11 @@ use stm32f4xx_hal::{
         Alternate, Output, PushPull, AF5,
     },
     rcc::Clocks,
-    spi::Spi,
+    spi::{Spi, TransferModeNormal},
     stm32::SPI1,
-    time::MegaHertz,
 };
 
-use embedded_hal::{digital::v2::OutputPin, spi::MODE_0};
+use embedded_hal::{spi::MODE_0};
 use spi_memory::{self, series25};
 
 type FlashSpi = Spi<
@@ -20,6 +19,7 @@ type FlashSpi = Spi<
         PB4<Alternate<AF5>>,
         PB5<Alternate<AF5>>,
     ),
+    TransferModeNormal
 >;
 type FlashCs = PA15<Output<PushPull>>;
 
@@ -39,17 +39,17 @@ impl Flash {
     ) -> Result<Flash, spi_memory::Error<FlashSpi, FlashCs>> {
         // Setup the Spi device
         let spi = {
-            let sck = pb3.into_alternate_af5();
-            let miso = pb4.into_alternate_af5();
-            let mosi = pb5.into_alternate_af5();
+            let sck = pb3.into_alternate();
+            let miso = pb4.into_alternate();
+            let mosi = pb5.into_alternate();
 
-            Spi::spi1(spi1, (sck, miso, mosi), MODE_0, MegaHertz(1).into(), clocks)
+            Spi::new(spi1, (sck, miso, mosi), MODE_0, 1_000_000, clocks)
         };
 
         // Setup the chip select pin
         let cs = {
             let mut cs = cs.into_push_pull_output();
-            let _ = cs.set_high().ok();
+            let _ = cs.set_high();
             cs
         };
 

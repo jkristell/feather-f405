@@ -20,23 +20,21 @@ fn main() -> ! {
     let clocks = setup_clocks(device.RCC);
     assert!(clocks.is_pll48clk_valid());
 
-    let mut delay = delay::Delay::new(core.SYST, clocks);
+    let mut delay = delay::Delay::new(core.SYST, &clocks);
 
     let gpiob = device.GPIOB.split();
     let gpioc = device.GPIOC.split();
     let gpiod = device.GPIOD.split();
 
-    let mut sd = SdHost::new(
-        device.SDIO,
-        gpioc.pc12,
-        gpiod.pd2,
-        gpioc.pc8,
-        gpioc.pc9,
-        gpioc.pc10,
-        gpioc.pc11,
-        gpiob.pb12,
-        clocks,
-    );
+    let mut sd = {
+        let clk = gpioc.pc12;
+        let cmd = gpiod.pd2;
+        let data = (gpioc.pc8, gpioc.pc9, gpioc.pc10, gpioc.pc11);
+        let cd = gpiob.pb12;
+
+        SdHost::new(device.SDIO, clk, cmd, data, cd, clocks)
+    };
+
 
     rprintln!("Waiting for card...");
 
