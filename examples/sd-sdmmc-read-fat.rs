@@ -114,7 +114,8 @@ fn main() -> ! {
 
     // Loop until we have a card
     loop {
-        match sdio.init_card(ClockFreq::F8Mhz) {
+        // if  DeviceError(DataCrcFail) then drop frequency
+        match sdio.init_card(ClockFreq::F4Mhz) {
             Ok(_) => break,
             Err(err) => {
                 rprintln!("Init err: {:?}", err);
