@@ -88,7 +88,7 @@ fn main() -> ! {
     assert!(clocks.is_pll48clk_valid());
 
     // Create a delay abstraction based on SysTick
-    let mut delay = hal::delay::Delay::new(core.SYST, clocks);
+    let mut delay = hal::delay::Delay::new(core.SYST, &clocks);
 
     let gpiob = device.GPIOB.split();
     let gpioc = device.GPIOC.split();
@@ -96,7 +96,7 @@ fn main() -> ! {
 
     let mut red_led = {
         let mut led = gpioc.pc1.into_push_pull_output();
-        let _ = led.set_low().ok();
+        let _ = led.set_low();
         led
     };
 
@@ -104,10 +104,7 @@ fn main() -> ! {
         device.SDIO,
         gpioc.pc12,
         gpiod.pd2,
-        gpioc.pc8,
-        gpioc.pc9,
-        gpioc.pc10,
-        gpioc.pc11,
+        (gpioc.pc8, gpioc.pc9, gpioc.pc10, gpioc.pc11),
         gpiob.pb12,
         clocks,
     );
@@ -123,7 +120,7 @@ fn main() -> ! {
         }
 
         delay.delay_ms(1000u32);
-        red_led.toggle().ok();
+        red_led.toggle();
     }
 
     let sdhc = Sd {
