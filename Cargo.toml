@@ -20,9 +20,9 @@ categories = [
 ]
 
 [dependencies]
-stm32f4xx-hal = { version = "0.10", features = ["rt", "stm32f405", "usb_fs", "sdio", "sdio-host"] }
+stm32f4xx-hal = { path = "../stm32f4xx-hal", features = ["rt", "stm32f405", "usb_fs", "sdio", "sdio-host"] }
 cortex-m = { version = "0.7" }
-cortex-m-rt = { version = "0.6" }
+cortex-m-rt = { version = "0.7" }
 embedded-hal = "0.2"
 embedded-sdmmc = "0.3.0"
 spi-memory = "0.2"

@@ -8,7 +8,7 @@ use stm32f4xx_hal::{
     },
     rcc::Clocks,
     sdio::Sdio,
-    stm32::SDIO,
+    pac::SDIO,
 };
 
 /// The sd host on the feather board
@@ -38,7 +38,7 @@ impl SdHost {
         // Card detect pin
         let cd = card_detect.into_pull_up_input();
 
-        let sdio = Sdio::new(dev, (clk, cmd, d0, d1, d2, d3), clocks);
+        let sdio = Sdio::new(dev, (clk, cmd, d0, d1, d2, d3), &clocks);
         SdHost { sdio, cd }
     }
 }
