@@ -88,7 +88,6 @@ fn main() -> ! {
 
     let mut led = Led::new(gpioc.pc1);
 
-
     let mut sd = {
         let clk = gpioc.pc12;
         let cmd = gpiod.pd2;

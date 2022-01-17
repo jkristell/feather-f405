@@ -2,24 +2,24 @@ use stm32f4xx_hal::{
     gpio::{
         gpioa::PA15,
         gpiob::{PB3, PB4, PB5},
-        Alternate, Output, PushPull, AF5,
+        Alternate, Output, PushPull,
     },
+    pac::SPI1,
     rcc::Clocks,
     spi::{Spi, TransferModeNormal},
-    stm32::SPI1,
 };
 
-use embedded_hal::{spi::MODE_0};
+use embedded_hal::spi::MODE_0;
 use spi_memory::{self, series25};
 
 type FlashSpi = Spi<
     SPI1,
     (
-        PB3<Alternate<AF5>>,
-        PB4<Alternate<AF5>>,
-        PB5<Alternate<AF5>>,
+        PB3<Alternate<PushPull, 5>>,
+        PB4<Alternate<PushPull, 5>>,
+        PB5<Alternate<PushPull, 5>>,
     ),
-    TransferModeNormal
+    TransferModeNormal,
 >;
 type FlashCs = PA15<Output<PushPull>>;
 
@@ -43,7 +43,7 @@ impl Flash {
             let miso = pb4.into_alternate();
             let mosi = pb5.into_alternate();
 
-            Spi::new(spi1, (sck, miso, mosi), MODE_0, 1_000_000, clocks)
+            Spi::new(spi1, (sck, miso, mosi), MODE_0, 1_000_000, &clocks)
         };
 
         // Setup the chip select pin

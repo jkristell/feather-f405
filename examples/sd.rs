@@ -6,13 +6,13 @@ use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
 use feather_f405::{
-    hal::{delay, prelude::*, sdio::ClockFreq, stm32},
+    hal::{delay, pac, prelude::*, sdio::ClockFreq},
     setup_clocks, SdHost,
 };
 
 #[entry]
 fn main() -> ! {
-    let device = stm32::Peripherals::take().unwrap();
+    let device = pac::Peripherals::take().unwrap();
     let core = cortex_m::Peripherals::take().unwrap();
 
     rtt_init_print!(BlockIfFull);
@@ -34,7 +34,6 @@ fn main() -> ! {
 
         SdHost::new(device.SDIO, clk, cmd, data, cd, clocks)
     };
-
 
     rprintln!("Waiting for card...");
 
