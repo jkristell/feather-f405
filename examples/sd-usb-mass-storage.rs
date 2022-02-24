@@ -14,7 +14,7 @@ use usbd_scsi::{BlockDevice, BlockDeviceError, Scsi};
 use core::convert::TryInto;
 use feather_f405::{
     hal::{
-        delay, interrupt,
+        interrupt,
         otg_fs::{UsbBus, UsbBusType, USB},
         prelude::*,
         sdio::ClockFreq,
@@ -79,7 +79,7 @@ fn main() -> ! {
     let clocks = setup_clocks(dp.RCC);
 
     // Create a delay abstraction based on SysTick
-    let mut delay = delay::Delay::new(p.SYST, &clocks);
+    let mut delay = p.SYST.delay(&clocks);
 
     let gpioa = dp.GPIOA.split();
     let gpiob = dp.GPIOB.split();

@@ -5,6 +5,7 @@ use stm32f4xx_hal::{
         Alternate, Output, PushPull,
     },
     pac::SPI1,
+    prelude::*,
     rcc::Clocks,
     spi::{Spi, TransferModeNormal},
 };
@@ -43,7 +44,7 @@ impl Flash {
             let miso = pb4.into_alternate();
             let mosi = pb5.into_alternate();
 
-            Spi::new(spi1, (sck, miso, mosi), MODE_0, 1_000_000, &clocks)
+            Spi::new(spi1, (sck, miso, mosi), MODE_0, 1.MHz(), &clocks)
         };
 
         // Setup the chip select pin

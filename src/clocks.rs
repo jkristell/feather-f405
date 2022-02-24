@@ -1,6 +1,8 @@
 use stm32f4xx_hal::pac;
-use stm32f4xx_hal::rcc::{Clocks, RccExt};
-use stm32f4xx_hal::time::U32Ext;
+use stm32f4xx_hal::{
+    prelude::*,
+    rcc::{Clocks, RccExt},
+};
 
 /// Helper for setting up the clocks on the board
 pub fn setup_clocks(rcc: pac::RCC) -> Clocks {
@@ -8,12 +10,12 @@ pub fn setup_clocks(rcc: pac::RCC) -> Clocks {
 
     let clocks = rcc
         .cfgr
-        .use_hse(12.mhz())
+        .use_hse(12.MHz())
         .require_pll48clk()
-        .sysclk(168.mhz())
-        .hclk(168.mhz())
-        .pclk1(42.mhz())
-        .pclk2(84.mhz())
+        .sysclk(168.MHz())
+        .hclk(168.MHz())
+        .pclk1(42.MHz())
+        .pclk2(84.MHz())
         .freeze();
 
     assert!(clocks.is_pll48clk_valid());

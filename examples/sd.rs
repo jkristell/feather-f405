@@ -6,7 +6,7 @@ use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
 use feather_f405::{
-    hal::{delay, pac, prelude::*, sdio::ClockFreq},
+    hal::{pac, prelude::*, sdio::ClockFreq},
     setup_clocks, SdHost,
 };
 
@@ -20,7 +20,7 @@ fn main() -> ! {
     let clocks = setup_clocks(device.RCC);
     assert!(clocks.is_pll48clk_valid());
 
-    let mut delay = delay::Delay::new(core.SYST, &clocks);
+    let mut delay = core.SYST.delay(&clocks);
 
     let gpiob = device.GPIOB.split();
     let gpioc = device.GPIOC.split();

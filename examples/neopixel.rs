@@ -5,10 +5,7 @@ use cortex_m_rt::entry;
 use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
 
-use feather_f405::{
-    hal::{delay::Delay, prelude::*, timer::Timer},
-    pac, setup_clocks, NeoPixel,
-};
+use feather_f405::{hal::prelude::*, pac, setup_clocks, NeoPixel};
 use smart_leds::{SmartLedsWrite, RGB8};
 
 #[entry]
@@ -20,10 +17,12 @@ fn main() -> ! {
 
     let clocks = setup_clocks(dp.RCC);
 
-    let mut delay = Delay::new(p.SYST, &clocks);
+    let mut delay = p.SYST.delay(&clocks);
     let gpioc = dp.GPIOC.split();
 
-    let timer = Timer::new(dp.TIM2, &clocks).start_count_down(3_000_000);
+    let mut timer = dp.TIM2.counter_hz(&clocks);
+    timer.start(3.MHz()).unwrap();
+
     let mut neopixel = NeoPixel::new(gpioc.pc0, timer);
 
     let mut data = RGB8 { r: 0, g: 0, b: 0 };
