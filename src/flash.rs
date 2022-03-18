@@ -31,18 +31,18 @@ pub struct Flash {
 
 impl Flash {
     pub fn new<M0, M1, M2, M3>(
-        pb3: PB3<M0>,
-        pb4: PB4<M1>,
-        pb5: PB5<M2>,
+        sck: PB3<M0>,
+        miso: PB4<M1>,
+        mosi: PB5<M2>,
         cs: PA15<M3>,
         spi1: SPI1,
         clocks: Clocks,
     ) -> Result<Flash, spi_memory::Error<FlashSpi, FlashCs>> {
         // Setup the Spi device
         let spi = {
-            let sck = pb3.into_alternate();
-            let miso = pb4.into_alternate();
-            let mosi = pb5.into_alternate();
+            let sck = sck.into_alternate();
+            let miso = miso.into_alternate();
+            let mosi = mosi.into_alternate();
 
             Spi::new(spi1, (sck, miso, mosi), MODE_0, 1.MHz(), &clocks)
         };

@@ -5,6 +5,7 @@ use cortex_m_rt::entry;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
+use feather_f405::pins::pins;
 use feather_f405::{
     hal::{pac, prelude::*, sdio::ClockFreq},
     setup_clocks, SdHost,
@@ -22,17 +23,17 @@ fn main() -> ! {
 
     let mut delay = core.SYST.delay(&clocks);
 
-    let gpiob = device.GPIOB.split();
-    let gpioc = device.GPIOC.split();
-    let gpiod = device.GPIOD.split();
+    let pins = pins(device.GPIOA, device.GPIOB, device.GPIOC, device.GPIOD);
 
     let mut sd = {
-        let clk = gpioc.pc12;
-        let cmd = gpiod.pd2;
-        let data = (gpioc.pc8, gpioc.pc9, gpioc.pc10, gpioc.pc11);
-        let cd = gpiob.pb12;
-
-        SdHost::new(device.SDIO, clk, cmd, data, cd, clocks)
+        SdHost::new(
+            device.SDIO,
+            pins.sd_clk,
+            pins.sd_cmd,
+            pins.sd_data,
+            pins.sd_cd,
+            clocks,
+        )
     };
 
     rprintln!("Waiting for card...");
