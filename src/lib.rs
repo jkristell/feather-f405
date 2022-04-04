@@ -5,6 +5,7 @@ mod clocks;
 mod flash;
 mod led;
 mod neopixel;
+pub mod pins;
 mod sd;
 
 pub use clocks::setup_clocks;
