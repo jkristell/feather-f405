@@ -2,14 +2,13 @@
 #![no_main]
 
 use cortex_m_rt::entry;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
-
-use feather_f405::pins::pins;
 use feather_f405::{
     hal::{pac, prelude::*, sdio::ClockFreq},
+    pins::pins,
     setup_clocks, SdHost,
 };
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
 
 #[entry]
 fn main() -> ! {
@@ -40,7 +39,7 @@ fn main() -> ! {
 
     // Wait for card to be ready
     loop {
-        match sd.init_card(ClockFreq::F24Mhz) {
+        match sd.init(ClockFreq::F24Mhz) {
             Ok(_) => break,
             Err(err) => rprintln!("Err: {:?}", err),
         }

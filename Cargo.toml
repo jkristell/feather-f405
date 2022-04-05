@@ -20,7 +20,7 @@ categories = [
 ]
 
 [dependencies]
-stm32f4xx-hal = { version = "0.12", features = ["rt", "stm32f405", "usb_fs", "sdio", "sdio-host"] }
+stm32f4xx-hal = { version = "0.13", features = ["rt", "stm32f405", "usb_fs", "sdio", "sdio-host"] }
 cortex-m = { version = "0.7" }
 cortex-m-rt = { version = "0.7" }
 embedded-hal = "0.2"

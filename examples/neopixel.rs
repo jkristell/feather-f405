@@ -2,10 +2,9 @@
 #![no_main]
 
 use cortex_m_rt::entry;
+use feather_f405::{hal::prelude::*, pac, setup_clocks, NeoPixel};
 use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
-
-use feather_f405::{hal::prelude::*, pac, setup_clocks, NeoPixel};
 use smart_leds::{SmartLedsWrite, RGB8};
 
 #[entry]

@@ -1,31 +1,28 @@
 use core::ops::{Deref, DerefMut};
+
 use stm32f4xx_hal::{
-    gpio::{
-        gpiob::PB12,
-        gpioc::{PC10, PC11, PC12, PC8, PC9},
-        gpiod::PD2,
-        Input, PullUp,
-    },
     pac::SDIO,
     rcc::Clocks,
-    sdio::Sdio,
+    sdio::{SdCard, Sdio},
 };
+
+use crate::pins::{SdCardDetect, SdClk, SdCmd, SdData};
 
 /// The sd host on the feather board
 pub struct SdHost {
     /// Card detect pin
-    pub cd: PB12<Input<PullUp>>,
+    pub cd: SdCardDetect,
     /// Sdio device
-    sdio: Sdio,
+    sdio: Sdio<SdCard>,
 }
 
 impl SdHost {
-    pub fn new<M0, M1, M2, M3, M4, M5, M6>(
+    pub fn new(
         dev: SDIO,
-        clk: PC12<M0>,
-        cmd: PD2<M1>,
-        (d0, d1, d2, d3): (PC8<M2>, PC9<M3>, PC10<M4>, PC11<M5>),
-        card_detect: PB12<M6>,
+        clk: SdClk,
+        cmd: SdCmd,
+        (d0, d1, d2, d3): SdData,
+        card_detect: SdCardDetect,
         clocks: Clocks,
     ) -> Self {
         let clk = clk.into_alternate().internal_pull_up(false);
@@ -44,7 +41,7 @@ impl SdHost {
 }
 
 impl Deref for SdHost {
-    type Target = Sdio;
+    type Target = Sdio<SdCard>;
 
     fn deref(&self) -> &Self::Target {
         &self.sdio
