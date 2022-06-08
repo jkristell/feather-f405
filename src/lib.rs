@@ -10,9 +10,8 @@ mod sd;
 
 pub use clocks::setup_clocks;
 pub use flash::Flash;
+pub use hal::pac;
 pub use led::Led;
 pub use neopixel::NeoPixel;
 pub use sd::SdHost;
-
-pub use hal::pac;
 pub use stm32f4xx_hal as hal;

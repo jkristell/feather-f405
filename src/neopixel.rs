@@ -1,9 +1,8 @@
-use stm32f4xx_hal::gpio::gpioc::PC0;
-use stm32f4xx_hal::gpio::{Output, PushPull, Speed};
-use ws2812_timer_delay::Ws2812;
-
 use core::ops::{Deref, DerefMut};
+
 use embedded_hal::timer::{CountDown, Periodic};
+use stm32f4xx_hal::gpio::{gpioc::PC0, Output, PushPull, Speed};
+use ws2812_timer_delay::Ws2812;
 
 /// NeoPixel
 pub struct NeoPixel<Timer> {
@@ -12,8 +11,9 @@ pub struct NeoPixel<Timer> {
 
 impl<Timer: CountDown + Periodic> NeoPixel<Timer> {
     // Create an abstraction for the onboard neopixel pin
-    pub fn new<M>(pin: PC0<M>, timer: Timer) -> Self {
-        let pin = pin.into_push_pull_output().set_speed(Speed::High);
+    pub fn new(pin: crate::pins::NeoPixel, timer: Timer) -> Self {
+        let mut pin = pin.into_push_pull_output();
+        pin.set_speed(Speed::High);
         let ws = Ws2812::new(timer, pin);
         NeoPixel { ws }
     }

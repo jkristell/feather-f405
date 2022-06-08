@@ -6,8 +6,8 @@ pub struct Led {
 }
 
 impl Led {
-    pub fn new<M>(pc1: PC1<M>) -> Self {
-        let mut led = pc1.into_push_pull_output();
+    pub fn new(led: crate::pins::Led) -> Self {
+        let mut led = led.into_push_pull_output();
         let _ = led.set_low();
         Self { led }
     }

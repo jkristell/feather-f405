@@ -1,8 +1,10 @@
+use embedded_hal::spi::MODE_0;
+use spi_memory::{self, series25};
 use stm32f4xx_hal::{
     gpio::{
         gpioa::PA15,
         gpiob::{PB3, PB4, PB5},
-        Alternate, Output, PushPull,
+        Output, PushPull, AF5,
     },
     pac::SPI1,
     prelude::*,
@@ -10,34 +12,25 @@ use stm32f4xx_hal::{
     spi::{Spi, TransferModeNormal},
 };
 
-use embedded_hal::spi::MODE_0;
-use spi_memory::{self, series25};
+use crate::pins::{FlashCs, FlashMiso, FlashMosi, FlashSck};
 
-type FlashSpi = Spi<
-    SPI1,
-    (
-        PB3<Alternate<PushPull, 5>>,
-        PB4<Alternate<PushPull, 5>>,
-        PB5<Alternate<PushPull, 5>>,
-    ),
-    TransferModeNormal,
->;
-type FlashCs = PA15<Output<PushPull>>;
+type FlashSpi = Spi<SPI1, (PB3<AF5>, PB4<AF5>, PB5<AF5>), TransferModeNormal>;
+type Cs = PA15<Output<PushPull>>;
 
 /// Spi flash
 pub struct Flash {
-    flash: series25::Flash<FlashSpi, FlashCs>,
+    flash: series25::Flash<FlashSpi, Cs>,
 }
 
 impl Flash {
-    pub fn new<M0, M1, M2, M3>(
-        sck: PB3<M0>,
-        miso: PB4<M1>,
-        mosi: PB5<M2>,
-        cs: PA15<M3>,
+    pub fn new(
+        sck: FlashSck,
+        miso: FlashMiso,
+        mosi: FlashMosi,
+        cs: FlashCs,
         spi1: SPI1,
         clocks: Clocks,
-    ) -> Result<Flash, spi_memory::Error<FlashSpi, FlashCs>> {
+    ) -> Result<Flash, spi_memory::Error<FlashSpi, Cs>> {
         // Setup the Spi device
         let spi = {
             let sck = sck.into_alternate();

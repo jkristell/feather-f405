@@ -1,5 +1,5 @@
-use stm32f4xx_hal::pac;
 use stm32f4xx_hal::{
+    pac,
     prelude::*,
     rcc::{Clocks, RccExt},
 };

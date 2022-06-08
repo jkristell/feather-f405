@@ -1,17 +1,10 @@
 #![no_std]
 #![no_main]
 
-use core::cell::RefCell;
+use core::{cell::RefCell, convert::TryInto};
 
 use cortex_m::{interrupt::Mutex, peripheral::NVIC};
 use cortex_m_rt::entry;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
-
-use usb_device::{bus::UsbBusAllocator, prelude::*};
-use usbd_scsi::{BlockDevice, BlockDeviceError, Scsi};
-
-use core::convert::TryInto;
 use feather_f405::{
     hal::{
         interrupt,
@@ -21,6 +14,10 @@ use feather_f405::{
     },
     pac, setup_clocks, Led, SdHost,
 };
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+use usb_device::{bus::UsbBusAllocator, prelude::*};
+use usbd_scsi::{BlockDevice, BlockDeviceError, Scsi};
 
 // Globals
 static mut EP_MEMORY: [u32; 1024] = [0; 1024];
@@ -101,7 +98,7 @@ fn main() -> ! {
 
     // Loop until we have a card
     loop {
-        match sd.init_card(ClockFreq::F12Mhz) {
+        match sd.init(ClockFreq::F12Mhz) {
             Ok(_) => break,
             Err(err) => {
                 rprintln!("Init err: {:?}", err);
