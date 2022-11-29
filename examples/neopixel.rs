@@ -7,6 +7,10 @@ use panic_rtt_target as _;
 use rtt_target::rtt_init_print;
 use smart_leds::{SmartLedsWrite, RGB8};
 
+///
+/// NOTE: Neopixels require very fast and fairly precise timing therefore
+/// this example should be compiled in release mode in order for it to work.
+///
 #[entry]
 fn main() -> ! {
     rtt_init_print!();
@@ -24,15 +28,14 @@ fn main() -> ! {
 
     let mut neopixel = NeoPixel::new(gpioc.pc0, timer);
 
-    let mut data = RGB8 { r: 0, g: 0, b: 0 };
+    let mut data = RGB8 { r: 127, g: 30, b: 20 };
+
+    neopixel.write([data].iter().cloned()).unwrap();
 
     loop {
-        data.r = data.r.wrapping_add(4);
-        data.g = data.g.wrapping_add(8);
-        data.b = data.b.wrapping_add(16);
-
+        (data.r, data.g, data.b) = (data.g, data.b, data.r);
         neopixel.write([data].iter().cloned()).unwrap();
 
-        delay.delay_ms(50u16);
+        delay.delay_ms(500u16);
     }
 }
